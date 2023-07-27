@@ -28,35 +28,15 @@ repositories {
     }
 }
 
-allprojects {
-    group = project.maven_group
-    apply plugin: "fabric-loom"
-    //apply plugin: "maven-publish"
-
-    dependencies {
-        // To change the versions see the gradle.properties file
-        minecraft "com.mojang:minecraft:${project.minecraft_version}"
-        mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-        modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-        // Fabric API. This is technically optional, but you probably want it anyway.
-        modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    }
-
-}
-
 dependencies {
     //include(modImplementation(files("libs/Nebula-2.0.0.jar")))
     //include(file("libs/Nebula-2.0.0.jar"))
-
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     //include(modImplementation("maven.modrinth:nebula:${project(":chainsmpspells").nebula_version}"))
     //include(modImplementation("dev.louis.ChainSMPSpells:ChainSMPSpells-1.2"))
-
-
-    modApi("me.shedaniel.cloth:cloth-config-fabric:11.0.99") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
 }
 processResources {
     inputs.property "version", project.version
