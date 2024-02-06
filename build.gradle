@@ -34,9 +34,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    //include(modImplementation("maven.modrinth:nebula:${project(":chainsmpspells").nebula_version}"))
-    //include(modImplementation("dev.louis.ChainSMPSpells:ChainSMPSpells-1.2"))
+    
 }
 processResources {
     inputs.property "version", project.version

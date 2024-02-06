@@ -24,7 +24,7 @@ public abstract class ServerListMixin {
 
     @Inject(method = "loadFile",
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/nbt/NbtIo;read(Ljava/io/File;)Lnet/minecraft/nbt/NbtCompound;"))
+                    target = "Lnet/minecraft/nbt/NbtIo;read(Ljava/nio/file/Path;)Lnet/minecraft/nbt/NbtCompound;"))
     public void addPromotedServers(CallbackInfo ci) {
         var promotedServers = PromotedServerConfig.readConfig().promotedServers;
         this.servers.addAll(promotedServers);
