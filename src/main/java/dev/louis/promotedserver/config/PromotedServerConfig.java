@@ -13,23 +13,23 @@ import net.minecraft.util.Util;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PromotedServerConfig {
     public static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public List<ServerInfo> promotedServers = new ArrayList<>();
-    private static final File FILE = FabricLoader.getInstance().getConfigDir().resolve("promotedserver").toFile();
+    private static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("promotedserver");
 
     public static void writeDefault() {
         try {
-            FILE.mkdirs();
+            PATH.toFile().mkdirs();
             NbtList nbtList = new NbtList();
             new PromotedServerConfig().promotedServers.forEach(serverInfo -> nbtList.add(serverInfo.toNbt()));
             NbtCompound nbt = new NbtCompound();
             nbt.put("servers", nbtList);
-            File promotedServerFile = FILE.toPath().resolve("servers.dat").toFile();
-            NbtIo.write(nbt, promotedServerFile);
+            NbtIo.write(nbt, PATH);
         } catch (Exception ignored) {}
     }
 
@@ -42,7 +42,7 @@ public class PromotedServerConfig {
     }
 
     private PromotedServerConfig readConfig(boolean rerun) throws IOException {
-        NbtCompound nbtCompound = NbtIo.read(new File(FILE, "servers.dat"));
+        NbtCompound nbtCompound = NbtIo.read(Path.of("servers.dat"));
         if (nbtCompound == null) {
             if(rerun)return this;
             writeDefault();
