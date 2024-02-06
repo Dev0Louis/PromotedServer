@@ -1,7 +1,9 @@
 package dev.louis.promotedserver.config;
 
+import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import jdk.jfr.StackTrace;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.nbt.NbtCompound;
@@ -19,7 +21,16 @@ import java.util.List;
 
 public class PromotedServerConfig {
     public static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    public List<ServerInfo> promotedServers = new ArrayList<>();
+    public List<ServerInfo> promotedServers = new ArrayList<>() {
+        @Override
+        public void add(int index, ServerInfo element) {
+            var isRight = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass().equals(PromotedServerConfig.class);
+            if(!isRight) {
+                System.out.println("WRONG CLASS CALLED");
+            }
+            super.add(index, element);
+        }
+    };
     private static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("promotedserver");
 
     public static void writeDefault() {
@@ -42,7 +53,7 @@ public class PromotedServerConfig {
     }
 
     private PromotedServerConfig readConfig(boolean rerun) throws IOException {
-        NbtCompound nbtCompound = NbtIo.read(Path.of("servers.dat"));
+        NbtCompound nbtCompound = NbtIo.read(PATH.resolve("servers.dat"));
         if (nbtCompound == null) {
             if(rerun)return this;
             writeDefault();
