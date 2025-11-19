@@ -1,6 +1,5 @@
 package dev.louis.promotedserver.mixin;
 
-import dev.louis.promotedserver.api.PromotedServerInfo;
 import dev.louis.promotedserver.config.PromotedServerConfig;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.ServerList;
@@ -32,7 +31,6 @@ public abstract class ServerListMixin {
     locals = LocalCapture.CAPTURE_FAILHARD)
     public void addPromotedServers(CallbackInfo ci) {
         var promotedServers = PromotedServerConfig.readConfig().promotedServers;
-        System.out.println(promotedServers.size());
         this.servers.addAll(promotedServers);
     }
 

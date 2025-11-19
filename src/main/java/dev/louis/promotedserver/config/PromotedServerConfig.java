@@ -1,20 +1,16 @@
 package dev.louis.promotedserver.config;
 
-import com.google.common.reflect.Reflection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import jdk.jfr.StackTrace;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.util.Util;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +20,6 @@ public class PromotedServerConfig {
     public List<ServerInfo> promotedServers = new ArrayList<>() {
         @Override
         public void add(int index, ServerInfo element) {
-            var isRight = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass().equals(PromotedServerConfig.class);
-            if(!isRight) {
-                System.out.println("WRONG CLASS CALLED");
-            }
             super.add(index, element);
         }
     };
@@ -59,12 +51,13 @@ public class PromotedServerConfig {
             writeDefault();
             return readConfig(true);
         }
-        NbtList nbtList = nbtCompound.getList("servers", NbtElement.COMPOUND_TYPE);
-        for (int i = 0; i < nbtList.size(); ++i) {
-            ServerInfo promotedServer = ServerInfo.fromNbt(nbtList.getCompound(i));
-            promotedServer.promotedserver$markAsPromoted();
-            this.promotedServers.add(promotedServer);
-        }
+        nbtCompound.getList("servers").ifPresent(nbtList -> {
+            for (int i = 0; i < nbtList.size(); ++i) {
+                ServerInfo promotedServer = ServerInfo.fromNbt(nbtList.getCompound(i).get());
+                promotedServer.promotedserver$markAsPromoted();
+                this.promotedServers.add(promotedServer);
+            }
+        });
         return this;
     }
 
